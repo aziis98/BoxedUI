@@ -13,6 +13,8 @@ internal class BoxWindowTest {
 
         val window = BoxWindow.fromXmlTemplate(Paths.get("res/test-window.xml"))
 
+
+
     }
 
 }

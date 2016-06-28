@@ -1,4 +1,4 @@
-<window title="BoxWindow Test">
+<window title="BoxWindow Test" width="800" height="600">
 
     <menubar left="0" right="0" top="0" height="27">
         <menu onClick="menu-file">File</menu>
