@@ -1,5 +1,15 @@
 <window title="BoxWindow Test" width="800" height="600">
 
+    <!--
+    <box left="0" right="0" top="0" height="27">
+        <feature-render by="render-menu"/>
+
+        <box onClick="menu-file">
+            <feature-render by="render-menu-label" text="File"/>
+        </box>
+    </box>
+    -->
+
     <menubar left="0" right="0" top="0" height="27">
         <menu onClick="menu-file">File</menu>
         <menu onClick="menu-edit">Edit</menu>

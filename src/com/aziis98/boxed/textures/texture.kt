@@ -1,4 +1,4 @@
-package com.aziis98.geometric
+package com.aziis98.boxed.textures
 
 import java.awt.Graphics2D
 import java.awt.image.BufferedImage
@@ -34,17 +34,17 @@ class NinePatch(image: BufferedImage,
                 val left: Int = 9, val right: Int = 9,
                 val top: Int = 9, val bottom: Int = 9) : Texture(image) {
     // @formatter:off
-    val patchTopLeft        = image.getSubimage(0            , 0, left                , top)
-    val patchTopCenter      = image.getSubimage(left         , 0, width - left - right, top)
-    val patchTopRight       = image.getSubimage(width - right, 0, right               , top)
+    val patchTopLeft        = image.getSubimage(0            , 0, left                , top)!!
+    val patchTopCenter      = image.getSubimage(left         , 0, width - left - right, top)!!
+    val patchTopRight       = image.getSubimage(width - right, 0, right               , top)!!
 
-    val patchCenterLeft     = image.getSubimage(0            , top,                left , height - top - bottom)
-    val patchCenterCenter   = image.getSubimage(left         , top, width - left - right, height - top - bottom)
-    val patchCenterRight    = image.getSubimage(width - right, top,                right, height - top - bottom)
+    val patchCenterLeft     = image.getSubimage(0            , top,                left , height - top - bottom)!!
+    val patchCenterCenter   = image.getSubimage(left         , top, width - left - right, height - top - bottom)!!
+    val patchCenterRight    = image.getSubimage(width - right, top,                right, height - top - bottom)!!
 
-    val patchBottomLeft     = image.getSubimage(0            , height - bottom, left                , bottom)
-    val patchBottomCenter   = image.getSubimage(left         , height - bottom, width - left - right, bottom)
-    val patchBottomRight    = image.getSubimage(width - right, height - bottom, right               , bottom)
+    val patchBottomLeft     = image.getSubimage(0            , height - bottom, left                , bottom)!!
+    val patchBottomCenter   = image.getSubimage(left         , height - bottom, width - left - right, bottom)!!
+    val patchBottomRight    = image.getSubimage(width - right, height - bottom, right               , bottom)!!
     // @formatter:on
 }
 
@@ -70,4 +70,11 @@ fun Graphics2D.drawNinePatchTexture(ninePatch: NinePatch, x: Int, y: Int, width:
         // @formatter:on
 
     }
+}
+
+object DefaultUITextures {
+
+    val menuBar = TextureLoader.ninePatch(Paths.get("assets/ui/light-toolbar.png"))
+    val statusBar = TextureLoader.ninePatch(Paths.get("assets/ui/light-statusbar.png"))
+
 }

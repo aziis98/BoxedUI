@@ -1,0 +1,5 @@
+<root>
+  <item name='java.awt.image.BufferedImage java.awt.image.BufferedImage getSubimage(int, int, int, int)'>
+    <annotation name='org.jetbrains.annotations.NotNull'/>
+  </item>
+</root>

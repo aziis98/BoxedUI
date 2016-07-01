@@ -1,6 +1,7 @@
 package com.aziis98.boxed
 
 import com.aziis98.boxed.features.render
+import com.aziis98.boxed.textures.*
 import com.aziis98.boxed.utils.*
 import org.w3c.dom.Element
 import java.awt.*
@@ -9,6 +10,7 @@ import java.nio.file.Path
 import java.util.*
 import javax.swing.JFrame
 import javax.xml.parsers.DocumentBuilderFactory
+import kotlin.concurrent.thread
 
 
 // Copyright 2016 Antonio De Lucreziis
@@ -24,6 +26,10 @@ class BoxWindow() : IContainer {
         contentPane.background = Color.BLACK
 
         System.setProperty("sun.awt.noerasebackground", "true")
+
+        thread {
+            applicationLoop()
+        }
     }
 
     val rootUi = Box(this, left = 0, right = 0, top = 0, bottom = 0)
@@ -121,9 +127,9 @@ class BoxWindow() : IContainer {
         }
     }
 
-    internal var buffer: BufferedImage? = null
+    private var buffer: BufferedImage? = null
 
-    internal fun renderInternal() {
+    private fun renderInternal() {
 
         if (buffer == null) {
             buffer = BufferedImage(width, height, BufferedImage.TYPE_INT_RGB)
@@ -160,7 +166,11 @@ class BoxWindow() : IContainer {
             templates.put("menubar") { element, parseElement ->
                 box() {
                     features += render { g ->
+                        g.drawNinePatchTexture(DefaultUITextures.menuBar, 0, 0, width, height)
+                    }
 
+                    element.getElementsByTagName("menu").asList().forEach {
+                        println(it.getAttribute("onClick"))
                     }
                 }
             }
@@ -175,7 +185,20 @@ class BoxWindow() : IContainer {
             assert(window.tagName == "window")
 
             val boxWindow = BoxWindow().apply {
+                window.childNodes.asList().forEach {
 
+                    val templater = templates[it.tagName]
+
+                    if (templater != null) {
+                        val box = rootUi.templater(it) {
+                            // TODO: Parse Default Box
+
+                            box {  }
+                        }
+
+                        rootUi.children.add(box)
+                    }
+                }
             }
 
             return boxWindow
