@@ -11,9 +11,9 @@ internal class BoxWindowTest {
     @Test
     fun testWindow() {
 
-        val window = BoxWindow.fromXmlTemplate(Paths.get("res/test-window.xml"))
-
-
+        val window = BoxWindow.fromXmlTemplate(Paths.get("res/test-window.xml")).apply {
+            visible = true
+        }
 
     }
 

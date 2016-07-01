@@ -9,10 +9,10 @@ import kotlin.comparisons.compareValues
 // Copyright 2016 Antonio De Lucreziis
 
 open class Box(val containter: IContainer,
-               var left: Int = -1, var right: Int = -1,
-               var top: Int = -1, var bottom: Int = -1,
-               override var width: Int = -1,
-               override var height: Int = -1) : IContainer, Comparable<Box> {
+               var left: Int = ABSENT, var right: Int = ABSENT,
+               var top: Int = ABSENT, var bottom: Int = ABSENT,
+               override var width: Int = ABSENT,
+               override var height: Int = ABSENT) : IContainer, Comparable<Box> {
 
     var enabled = true
     var zIndex = 0
@@ -76,6 +76,7 @@ open class Box(val containter: IContainer,
         const val WIDTH = 4
         const val HEIGHT = 5
 
+        const val ABSENT = -1
     }
 
     fun Int.isAbsent() = !constraintFlags.get(this)

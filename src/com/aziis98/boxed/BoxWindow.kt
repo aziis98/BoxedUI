@@ -42,6 +42,10 @@ class BoxWindow() : IContainer {
         get() = jframe.height - (jframe.insets.top + jframe.insets.bottom)
         set(value) { jframe.setSize(jframe.width, value + (jframe.insets.top + jframe.insets.bottom)) }
 
+    var title: String
+        get() = jframe.title
+        set(value) { jframe.title = value }
+
     var visible: Boolean
         get() = jframe.isVisible
         set(value) { jframe.isVisible = value }
@@ -63,18 +67,18 @@ class BoxWindow() : IContainer {
     val timeBetweenRenders: Int
         get () = 1000000000 / 60
 
-    internal var lastUpdateTime = System.nanoTime()
+    private var lastUpdateTime = System.nanoTime()
 
-    internal var lastRenderTime = System.nanoTime()
+    private var lastRenderTime = System.nanoTime()
 
-    internal var lastSecondTime = (lastUpdateTime / 1000000000).toInt()
+    private var lastSecondTime = (lastUpdateTime / 1000000000).toInt()
 
     var maxUpdatesBeforeRender = 5
     var showFPS = true
     // var pauseRendering = false
     var totalUpdates = 0
 
-    fun applicationLoop() {
+    private fun applicationLoop() {
 
         while (visible) {
 
@@ -160,19 +164,45 @@ class BoxWindow() : IContainer {
 
     companion object {
 
-        val templates = HashMap<String, Box.(Element, Box.(Element) -> Box) -> Box>()
+        val boxTemplates = HashMap<String, (parent: Box, Element) -> Unit>()
+        val featureTemplates = HashMap<String, (parent: Box, Element) -> Unit>()
 
         init {
-            templates.put("menubar") { element, parseElement ->
-                box() {
+            boxTemplates.put("box") { parent, element ->
+                parent.box(
+                    left = element.getAttribute("left").toNullableInt() ?: Box.ABSENT,
+                    right = element.getAttribute("right").toNullableInt() ?: Box.ABSENT,
+                    top = element.getAttribute("top").toNullableInt() ?: Box.ABSENT,
+                    bottom = element.getAttribute("bottom").toNullableInt() ?: Box.ABSENT,
+                    width = element.getAttribute("width").toNullableInt() ?: Box.ABSENT,
+                    height = element.getAttribute("height").toNullableInt() ?: Box.ABSENT
+                ) {
+                    element.childNodes.asElementList().forEach {
+                        if (it.tagName.startsWith("feature")) {
+                            parseFeature(this, it)
+                        }
+                        else {
+                            parseElement(this, it)
+                        }
+                    }
+                }
+            }
+
+            boxTemplates.put("menubar") { parent, element ->
+                parent.box() {
                     features += render { g ->
                         g.drawNinePatchTexture(DefaultUITextures.menuBar, 0, 0, width, height)
                     }
 
-                    element.getElementsByTagName("menu").asList().forEach {
+                    element.getElementsByTagName("menu").asElementList().forEach {
                         println(it.getAttribute("onClick"))
                     }
                 }
+            }
+
+
+            featureTemplates.put("feature-render") { parent, element ->
+
             }
         }
 
@@ -185,23 +215,26 @@ class BoxWindow() : IContainer {
             assert(window.tagName == "window")
 
             val boxWindow = BoxWindow().apply {
-                window.childNodes.asList().forEach {
+                title = window.getAttribute("title")
+                width = window.getAttribute("width").toNullableInt() ?: 640
+                height = window.getAttribute("height").toNullableInt() ?: 480
 
-                    val templater = templates[it.tagName]
-
-                    if (templater != null) {
-                        val box = rootUi.templater(it) {
-                            // TODO: Parse Default Box
-
-                            box {  }
-                        }
-
-                        rootUi.children.add(box)
-                    }
+                window.childNodes.asElementList().forEach {
+                    parseElement(rootUi, it)
                 }
             }
 
             return boxWindow
+        }
+
+        fun parseElement(parent: Box, element: Element) {
+            val templater = boxTemplates[element.tagName]!!
+
+            templater(parent, element)
+        }
+
+        fun parseFeature(parent: Box, element: Element) {
+            featureTemplates[element.tagName]!!(parent, element)
         }
 
     }

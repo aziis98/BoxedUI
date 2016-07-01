@@ -21,7 +21,10 @@ fun Box.box(left: Int = -1,
             height: Int = -1,
             block: Box.() -> Unit): Box {
 
-    return Box(this, left, right, top, bottom, width, height).apply(block)
+    return Box(this, left, right, top, bottom, width, height).apply {
+        block()
+        this@box.children.add(this)
+    }
 }
 
 fun Box.queryChildren(predicate: (Box) -> Boolean): Box {

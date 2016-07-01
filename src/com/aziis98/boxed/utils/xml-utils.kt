@@ -13,4 +13,4 @@ private class ListByNodeList(val nodeList: NodeList) : AbstractList<Element?>() 
         get() = nodeList.length
 }
 
-fun NodeList.asList() = if(length == 0) emptyList() else ListByNodeList(this).filterNotNull()
+fun NodeList.asElementList() = if(length == 0) emptyList() else ListByNodeList(this).filterNotNull()
