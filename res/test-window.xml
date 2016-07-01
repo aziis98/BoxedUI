@@ -1,4 +1,4 @@
-<Window title="BoxWindow Test" width="800" height="600">
+<Window title="BoxWindow Test" width="1000" height="600">
 
     <Box left="0" right="0" top="0" height="27">
         <Feature type="render" by="menu"/>

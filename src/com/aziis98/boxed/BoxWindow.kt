@@ -8,7 +8,7 @@ import java.awt.*
 import java.awt.image.BufferedImage
 import java.nio.file.Path
 import java.util.*
-import javax.swing.JFrame
+import javax.swing.*
 import javax.xml.parsers.DocumentBuilderFactory
 import kotlin.concurrent.thread
 
@@ -21,15 +21,11 @@ class BoxWindow() : IContainer {
         override fun paint(g: Graphics) { }
         override fun update(g: Graphics) { }
     }.apply {
-        setLocationRelativeTo(null)
+        defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
         background = Color.BLACK
         contentPane.background = Color.BLACK
 
         System.setProperty("sun.awt.noerasebackground", "true")
-
-        thread {
-            applicationLoop()
-        }
     }
 
     val rootUi = Box(this, left = 0, right = 0, top = 0, bottom = 0)
@@ -53,6 +49,13 @@ class BoxWindow() : IContainer {
     var resizable: Boolean
         get() = jframe.isResizable
         set(value) { jframe.isResizable = value }
+
+    fun start() {
+        visible = true
+        thread {
+            applicationLoop()
+        }
+    }
 
     // Rendering
     //

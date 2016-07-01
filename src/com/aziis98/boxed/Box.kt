@@ -83,7 +83,11 @@ open class Box(val containter: IContainer,
         const val ABSENT = -1
     }
 
-    fun Int.isAbsent() = !constraintFlags.get(this)
+    protected fun Int.isAbsent() = !constraintFlags.get(this)
+
+    override fun toString(): String {
+        return "Box(left=$left, right=$right, top=$top, bottom=$bottom, width=$width, height=$height)"
+    }
 
     override fun compareTo(other: Box): Int {
         return iff(compareValues(zIndex, other.zIndex), 0, 1)
