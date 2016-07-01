@@ -12,7 +12,8 @@ open class Box(val containter: IContainer,
                var left: Int = ABSENT, var right: Int = ABSENT,
                var top: Int = ABSENT, var bottom: Int = ABSENT,
                override var width: Int = ABSENT,
-               override var height: Int = ABSENT) : IContainer, Comparable<Box> {
+               override var height: Int = ABSENT,
+               val id: String = "_noId_") : IContainer, Comparable<Box> {
 
     var enabled = true
     var zIndex = 0
@@ -60,9 +61,9 @@ open class Box(val containter: IContainer,
             }
 
             when {
-                TOP.isAbsent() -> top = containter.width - right - width
-                BOTTOM.isAbsent() -> bottom = containter.width - left - width
-                HEIGHT.isAbsent() -> height = containter.width - left - right
+                TOP.isAbsent() -> top = containter.height - bottom - height
+                BOTTOM.isAbsent() -> bottom = containter.height - top - height
+                HEIGHT.isAbsent() -> height = containter.height - top - bottom
             }
 
             recomputeLayout--
@@ -86,7 +87,7 @@ open class Box(val containter: IContainer,
     protected fun Int.isAbsent() = !constraintFlags.get(this)
 
     override fun toString(): String {
-        return "Box(left=$left, right=$right, top=$top, bottom=$bottom, width=$width, height=$height)"
+        return "Box(id='$id', left=$left, right=$right, top=$top, bottom=$bottom, width=$width, height=$height)"
     }
 
     override fun compareTo(other: Box): Int {

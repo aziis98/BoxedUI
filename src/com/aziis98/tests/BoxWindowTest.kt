@@ -24,6 +24,7 @@ fun main(args: Array<String>) {
     val window = BoxWindow.fromXmlTemplate(Paths.get("res/test-window.xml"))
 
     window.start()
+    window.rootUi.updateLayout()
 
     printfRec(window.rootUi) { fsb, box, rec ->
         fsb.appendln("$box [")

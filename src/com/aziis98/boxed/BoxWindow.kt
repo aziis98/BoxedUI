@@ -28,7 +28,7 @@ class BoxWindow() : IContainer {
         System.setProperty("sun.awt.noerasebackground", "true")
     }
 
-    val rootUi = Box(this, left = 0, right = 0, top = 0, bottom = 0)
+    val rootUi = Box(this, left = 0, right = 0, top = 0, bottom = 0, id = "window")
 
     override var width: Int
         get() = jframe.width - (jframe.insets.left + jframe.insets.right)
@@ -205,7 +205,7 @@ class BoxWindow() : IContainer {
 
 
             featureTypes.put("render") { parent, element ->
-                parent.render { g ->
+                parent.features += parent.render { g ->
                     RenderRegistry.registry[element.getAttribute("by")]!!(this, g, element)
                 }
             }

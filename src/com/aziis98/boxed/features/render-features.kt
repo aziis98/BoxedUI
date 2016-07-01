@@ -3,7 +3,7 @@ package com.aziis98.boxed.features
 import com.aziis98.boxed.Box
 import com.aziis98.boxed.utils.drawStringCentered
 import org.w3c.dom.Element
-import java.awt.Graphics2D
+import java.awt.*
 import java.util.*
 
 // Copyright 2016 Antonio De Lucreziis
@@ -29,6 +29,7 @@ object RenderRegistry {
         }
         register("menu-label") { box, g, el ->
             val text = el.getAttribute("text")
+            g.color = Color.WHITE
             g.drawStringCentered(text, box.width / 2, box.height / 2)
         }
     }
