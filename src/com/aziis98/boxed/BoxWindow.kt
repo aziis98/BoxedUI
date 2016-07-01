@@ -1,6 +1,6 @@
 package com.aziis98.boxed
 
-import com.aziis98.boxed.features.render
+import com.aziis98.boxed.features.*
 import com.aziis98.boxed.textures.*
 import com.aziis98.boxed.utils.*
 import org.w3c.dom.Element
@@ -165,10 +165,10 @@ class BoxWindow() : IContainer {
     companion object {
 
         val boxTemplates = HashMap<String, (parent: Box, Element) -> Unit>()
-        val featureTemplates = HashMap<String, (parent: Box, Element) -> Unit>()
+        val featureTypes = HashMap<String, (parent: Box, Element) -> Unit>()
 
         init {
-            boxTemplates.put("box") { parent, element ->
+            boxTemplates.put("Box") { parent, element ->
                 parent.box(
                     left = element.getAttribute("left").toNullableInt() ?: Box.ABSENT,
                     right = element.getAttribute("right").toNullableInt() ?: Box.ABSENT,
@@ -178,7 +178,7 @@ class BoxWindow() : IContainer {
                     height = element.getAttribute("height").toNullableInt() ?: Box.ABSENT
                 ) {
                     element.childNodes.asElementList().forEach {
-                        if (it.tagName.startsWith("feature")) {
+                        if (it.tagName == "Feature") {
                             parseFeature(this, it)
                         }
                         else {
@@ -201,8 +201,10 @@ class BoxWindow() : IContainer {
             }
 
 
-            featureTemplates.put("feature-render") { parent, element ->
-
+            featureTypes.put("render") { parent, element ->
+                parent.render { g ->
+                    RenderRegistry.registry[element.getAttribute("by")]!!(this, g, element)
+                }
             }
         }
 
@@ -212,7 +214,7 @@ class BoxWindow() : IContainer {
                 .newDocumentBuilder()
                 .parse(path.toFile()).documentElement
 
-            assert(window.tagName == "window")
+            assert(window.tagName == "Window")
 
             val boxWindow = BoxWindow().apply {
                 title = window.getAttribute("title")
@@ -234,7 +236,7 @@ class BoxWindow() : IContainer {
         }
 
         fun parseFeature(parent: Box, element: Element) {
-            featureTemplates[element.tagName]!!(parent, element)
+            featureTypes[element.getAttribute("type")]!!(parent, element)
         }
 
     }

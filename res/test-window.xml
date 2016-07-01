@@ -1,23 +1,11 @@
-<window title="BoxWindow Test" width="800" height="600">
+<Window title="BoxWindow Test" width="800" height="600">
 
-    <box left="0" right="0" top="0" height="27">
-        <feature-render by="render-menu"/>
+    <Box left="0" right="0" top="0" height="27">
+        <Feature type="render" by="menu"/>
 
-        <box onClick="menu-file">
-            <feature-render by="render-menu-label" text="File"/>
-        </box>
-    </box>
+        <Box left="5" width="100" height="27" top="0" onClick="menu-file">
+            <Feature type="render" by="menu-label" text="File"/>
+        </Box>
+    </Box>
 
-    <!--
-    <menubar left="0" right="0" top="0" height="27">
-        <menu onClick="menu-file">File</menu>
-        <menu onClick="menu-edit">Edit</menu>
-        <menu onClick="menu-help">Help</menu>
-    </menubar>
-
-    <panel margin="100,100,100,100">
-
-    </panel>
-    -->
-
-</window>
+</Window>

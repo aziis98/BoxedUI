@@ -1,6 +1,8 @@
 package com.aziis98.boxed.features
 
 import com.aziis98.boxed.Box
+import com.aziis98.boxed.utils.drawStringCentered
+import org.w3c.dom.Element
 import java.awt.Graphics2D
 import java.util.*
 
@@ -15,7 +17,19 @@ class RenderizeFeature(override val box: Box, val func: Box.(Graphics2D) -> Unit
 fun Box.render(func: Box.(Graphics2D) -> Unit) = RenderizeFeature(this, func)
 
 object RenderRegistry {
-    val registry = HashMap<String, (Box, Graphics2D) -> Unit>()
+    val registry = HashMap<String, (Box, Graphics2D, Element) -> Unit>()
 
+    fun register(id: String, func: (Box, Graphics2D, Element) -> Unit) {
+        registry.put(id, func)
+    }
 
+    init {
+        register("menu") { box, g, el ->
+
+        }
+        register("menu-label") { box, g, el ->
+            val text = el.getAttribute("text")
+            g.drawStringCentered(text, box.width / 2, box.height / 2)
+        }
+    }
 }

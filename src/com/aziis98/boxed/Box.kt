@@ -23,7 +23,7 @@ open class Box(val containter: IContainer,
     val tags     = HashSet<String>()
 
     private val constraintFlags = BitSet()
-    private var recomputeLayout = 0
+    private var recomputeLayout = 10
 
     init {
         constraintFlags.set(LEFT, left >= 0)
@@ -39,7 +39,11 @@ open class Box(val containter: IContainer,
 
         tryRun<RenderFeature> { it.render(g) }
 
-        children.forEach { it.render(g) }
+        children.forEach {
+            g.translate(it.left, it.top)
+            it.render(g)
+            g.translate(-it.left, -it.top)
+        }
     }
 
     fun updateLayout() {
