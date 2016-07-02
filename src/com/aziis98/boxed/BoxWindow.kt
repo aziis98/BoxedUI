@@ -1,10 +1,11 @@
 package com.aziis98.boxed
 
 import com.aziis98.boxed.features.*
-import com.aziis98.boxed.textures.*
+import com.aziis98.boxed.textures.DefaultUI
 import com.aziis98.boxed.utils.*
-import org.w3c.dom.Element
+import org.w3c.dom.*
 import java.awt.*
+import java.awt.event.*
 import java.awt.image.BufferedImage
 import java.nio.file.Path
 import java.util.*
@@ -24,6 +25,15 @@ class BoxWindow() : IContainer {
         defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
         background = Color.BLACK
         contentPane.background = Color.BLACK
+
+        minimumSize = Dimension(200, 200)
+
+        addComponentListener(object : ComponentAdapter() {
+            override fun componentResized(e: ComponentEvent) {
+                rootUi.invalidateLayout()
+                dirtyBuffer = true
+            }
+        })
 
         System.setProperty("sun.awt.noerasebackground", "true")
     }
@@ -134,11 +144,12 @@ class BoxWindow() : IContainer {
         }
     }
 
+    private var dirtyBuffer = false
     private var buffer: BufferedImage? = null
 
     private fun renderInternal() {
 
-        if (buffer == null) {
+        if (buffer == null || dirtyBuffer) {
             buffer = BufferedImage(width, height, BufferedImage.TYPE_INT_RGB)
         }
 
@@ -148,6 +159,8 @@ class BoxWindow() : IContainer {
         g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HRGB)
         g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR)
 
+        g.font = DefaultUI.standardFont
+
         render(g)
 
         jframe.graphics.drawImage(buffer, jframe.insets.left, jframe.insets.top, null)
@@ -156,6 +169,9 @@ class BoxWindow() : IContainer {
     }
 
     private fun render(g: Graphics2D) {
+        g.background = Color.WHITE
+        g.clearRect(0, 0, width, height)
+
         rootUi.render(g)
     }
 
@@ -180,34 +196,38 @@ class BoxWindow() : IContainer {
                     width = element.getAttribute("width").toNullableInt() ?: Box.ABSENT,
                     height = element.getAttribute("height").toNullableInt() ?: Box.ABSENT
                 ) {
+                    zIndex = element.getAttribute("z-index").toNullableInt() ?: 0
+
                     element.childNodes.asElementList().forEach {
-                        if (it.tagName == "Feature") {
-                            parseFeature(this, it)
-                        }
-                        else {
-                            parseElement(this, it)
+                        when {
+                            it.tagName == "Feature" ->
+                                parseFeature(this, it)
+                            else ->
+                                parseElement(this, it)
                         }
                     }
                 }
             }
-
-            boxTemplates.put("menubar") { parent, element ->
-                parent.box() {
-                    features += render { g ->
-                        g.drawNinePatchTexture(DefaultUITextures.menuBar, 0, 0, width, height)
-                    }
-
-                    element.getElementsByTagName("menu").asElementList().forEach {
-                        println(it.getAttribute("onClick"))
-                    }
-                }
-            }
-
 
             featureTypes.put("render") { parent, element ->
                 parent.features += parent.render { g ->
                     RenderRegistry.registry[element.getAttribute("by")]!!(this, g, element)
                 }
+            }
+            featureTypes.put("layout-stack") { parent, element ->
+                val attrDirection = element.getAttribute("direction")
+
+                parent.features += EqualizedLayout(parent,
+                    left   = element.getAttribute("left").toNullableInt() ?: 0,
+                    right  = element.getAttribute("right").toNullableInt() ?: 0,
+                    top    = element.getAttribute("top").toNullableInt() ?: 0,
+                    bottom = element.getAttribute("bottom").toNullableInt() ?: 0,
+                    flowDirection = attrDirection.toDirection(),
+                    gap = element.getAttribute("gap").toNullableInt() ?: 0
+                )
+            }
+            featureTypes.put("layout-flow") { parent, element ->
+
             }
         }
 
@@ -230,6 +250,10 @@ class BoxWindow() : IContainer {
             }
 
             return boxWindow
+        }
+
+        fun NodeList.parseChildren(parent: Box) {
+            asElementList().forEach { parseElement(parent, it) }
         }
 
         fun parseElement(parent: Box, element: Element) {

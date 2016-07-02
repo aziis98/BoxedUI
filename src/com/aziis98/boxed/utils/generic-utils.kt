@@ -16,3 +16,16 @@ fun Graphics2D.drawStringCentered(string: String, x: Int, y: Int): Rectangle2D {
     drawString(string, (x - bounds.width / 2).toInt(), y + (bounds.height / 2).toInt())
     return bounds
 }
+
+fun <T> T?.notNull(block: T.() -> Unit) {
+    this?.block()
+}
+
+enum class Direction {
+    Horizontal,
+    Vertical
+}
+
+fun <T> List<T>.init() = filterIndexed { i, t -> i != lastIndex }
+
+fun <T> List<T>.tail() = filterIndexed { i, t -> i != 0 }

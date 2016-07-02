@@ -15,6 +15,7 @@ open class Box(val containter: IContainer,
                override var height: Int = ABSENT,
                val id: String = "_noId_") : IContainer, Comparable<Box> {
 
+    val constraintFlags = BitSet()
     var enabled = true
     var zIndex = 0
 
@@ -23,16 +24,35 @@ open class Box(val containter: IContainer,
     var children = SortedList<Box>()
     val tags     = HashSet<String>()
 
-    private val constraintFlags = BitSet()
     private var recomputeLayout = 10
 
     init {
-        constraintFlags.set(LEFT, left >= 0)
-        constraintFlags.set(RIGHT, right >= 0)
-        constraintFlags.set(TOP, top >= 0)
-        constraintFlags.set(BOTTOM, bottom >= 0)
-        constraintFlags.set(WIDTH, width >= 0)
-        constraintFlags.set(HEIGHT, height >= 0)
+        refreshConstraintFlags()
+    }
+
+    fun refreshConstraintFlags() {
+        //@formatter:off
+        constraintFlags.set(LEFT  , left   != ABSENT)
+        constraintFlags.set(RIGHT , right  != ABSENT)
+        constraintFlags.set(TOP   , top    != ABSENT)
+        constraintFlags.set(BOTTOM, bottom != ABSENT)
+        constraintFlags.set(WIDTH , width  != ABSENT)
+        constraintFlags.set(HEIGHT, height != ABSENT)
+        //@formatter:on
+    }
+
+    fun setPosition(left: Int = ABSENT, right: Int = ABSENT,
+                    top: Int = ABSENT, bottom: Int = ABSENT,
+                    width: Int = ABSENT,
+                    height: Int = ABSENT) {
+        this.left = left
+        this.right = right
+        this.top = top
+        this.bottom = bottom
+        this.width = width
+        this.height = height
+
+        refreshConstraintFlags()
     }
 
     fun render(g: Graphics2D) {
@@ -70,6 +90,12 @@ open class Box(val containter: IContainer,
         }
 
         children.forEach(Box::updateLayout)
+    }
+
+    fun invalidateLayout() {
+        recomputeLayout++
+
+        children.forEach { it.invalidateLayout() }
     }
 
 

@@ -1,7 +1,8 @@
 package com.aziis98.boxed.features
 
 import com.aziis98.boxed.Box
-import com.aziis98.boxed.utils.drawStringCentered
+import com.aziis98.boxed.textures.*
+import com.aziis98.boxed.utils.*
 import org.w3c.dom.Element
 import java.awt.*
 import java.util.*
@@ -25,12 +26,21 @@ object RenderRegistry {
 
     init {
         register("menu") { box, g, el ->
-
+            g.drawNinePatchTexture(DefaultUI.menuBar, 0, 0, box.width, box.height)
         }
         register("menu-label") { box, g, el ->
             val text = el.getAttribute("text")
-            g.color = Color.WHITE
-            g.drawStringCentered(text, box.width / 2, box.height / 2)
+            val color = el.getAttribute("color").toColor() ?: Color.WHITE
+            g.color = color
+            val bounds = g.drawStringCentered(text, box.width / 2, box.height / 2 - 3)
+
+            box.width = bounds.width.toInt() + 15
+            box.constraintFlags[Box.WIDTH] = true
+        }
+        register("border") { box, g, el ->
+            val color = el.getAttribute("color").toColor() ?: Color.WHITE
+            g.color = color
+            g.drawRect(0, 0, box.width, box.height)
         }
     }
 }
