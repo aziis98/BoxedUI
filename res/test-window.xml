@@ -10,23 +10,27 @@
                  -->
         <Feature type="layout-flow"
                  direction="horizontal"
-                 gap="5"/>
+                 gap="1"/>
 
-        <Box height="27" top="0" onClick="menu-file">
+        <Box left="0" top="0" height="27"
+             onClick="menu-file">
             <Feature type="render" by="menu-label" color="0x666666" text="File"/>
-            <Feature type="render" by="border" color="0x00FF00"/>
+            <!--<Feature type="render" by="border" color="0x00FF00"/>-->
         </Box>
-        <Box height="27" top="0" onClick="menu-edit">
+        <Box top="0" height="27"
+             onClick="menu-edit">
             <Feature type="render" by="menu-label" color="0x666666" text="Edit"/>
-            <Feature type="render" by="border" color="0x00FFFF"/>
+            <!--<Feature type="render" by="border" color="0x0000FF"/>-->
         </Box>
-        <Box height="27" top="0" onClick="menu-file">
+        <Box top="0" height="27"
+             onClick="menu-view">
             <Feature type="render" by="menu-label" color="0x666666" text="View"/>
-            <Feature type="render" by="border" color="0xFF0000"/>
+            <!--<Feature type="render" by="border" color="0xFF0000"/>-->
         </Box>
-        <Box height="27" top="0" onClick="menu-file">
+        <Box top="0" height="27"
+             onClick="menu-help">
             <Feature type="render" by="menu-label" color="0x666666" text="Help"/>
-            <Feature type="render" by="border" color="0x0000FF"/>
+            <!--<Feature type="render" by="border" color="0xFF00FF"/>-->
         </Box>
     </Box>
 

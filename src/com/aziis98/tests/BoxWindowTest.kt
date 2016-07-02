@@ -21,18 +21,23 @@ internal class BoxWindowTest {
 }
 
 fun main(args: Array<String>) {
-    val window = BoxWindow.fromXmlTemplate(Paths.get("res/test-window.xml"))
-
-    window.start()
-    window.rootUi.updateLayout()
-
-    printfRec(window.rootUi) { fsb, box, rec ->
-        fsb.appendln("$box [")
-        fsb.indented {
-            box.children.forEach {
-                rec(it)
+    BoxWindow.fromXmlTemplate(Paths.get("res/test-window.xml")).apply {
+        rootUi.apply {
+            events.on("menu-file") {
+                println("Show the File menu")
             }
         }
-        fsb.appendln("]")
+
+        start()
+
+        printfRec(rootUi) { fsb, box, rec ->
+            fsb.appendln("$box [")
+            fsb.indented {
+                box.children.forEach {
+                    rec(it)
+                }
+            }
+            fsb.appendln("]")
+        }
     }
 }

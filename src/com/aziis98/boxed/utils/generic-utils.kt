@@ -29,3 +29,7 @@ enum class Direction {
 fun <T> List<T>.init() = filterIndexed { i, t -> i != lastIndex }
 
 fun <T> List<T>.tail() = filterIndexed { i, t -> i != 0 }
+
+fun <T> Collection<T>.get(element: T) = contains(element)
+
+fun <K, V> Map<K, V>.get(element: K) = containsKey(element)

@@ -1,5 +1,6 @@
 package com.aziis98.boxed
 
+import com.aziis98.boxed.events.*
 import com.aziis98.boxed.features.*
 import com.aziis98.boxed.utils.*
 import java.awt.Graphics2D
@@ -19,15 +20,46 @@ open class Box(val containter: IContainer,
     var enabled = true
     var zIndex = 0
 
-    var features: List<Feature> = ArrayList()
-
+    var features: Collection<Feature> = ArrayList()
     var children = SortedList<Box>()
-    val tags     = HashSet<String>()
+
+    val tags = HashSet<String>()
+    val events = EventDispatcher()
 
     private var recomputeLayout = 10
 
     init {
         refreshConstraintFlags()
+
+        events.parent = parent?.events
+
+        events.afterDispatchAction = { eventName ->
+            children.forEach {
+                it.events.dispatch(eventName)
+            }
+        }
+
+        events.onCancellable("mouse:click") {
+            if (contains(Mouse.x, Mouse.y))
+                EventResult.Continue
+            else
+                EventResult.Cancel
+        }
+    }
+
+    val parent: Box?
+        get() = containter as? Box
+
+    val absoluteLeft: Int
+        get() = left + (parent?.absoluteLeft ?: 0)
+
+    val absoluteTop: Int
+        get() = top + (parent?.absoluteTop ?: 0)
+
+    fun contains(x: Int, y: Int): Boolean {
+        val absTop = absoluteTop
+        val absLeft = absoluteLeft
+        return x in absLeft .. absLeft + width && y in absTop .. absTop + height
     }
 
     fun refreshConstraintFlags() {
@@ -38,7 +70,7 @@ open class Box(val containter: IContainer,
         constraintFlags.set(BOTTOM, bottom != ABSENT)
         constraintFlags.set(WIDTH , width  != ABSENT)
         constraintFlags.set(HEIGHT, height != ABSENT)
-        //@formatter:on
+        //@formatter:onCancellable
     }
 
     fun setPosition(left: Int = ABSENT, right: Int = ABSENT,

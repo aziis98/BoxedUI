@@ -45,7 +45,7 @@ class NinePatch(image: BufferedImage,
     val patchBottomLeft     = image.getSubimage(0            , height - bottom, left                , bottom)!!
     val patchBottomCenter   = image.getSubimage(left         , height - bottom, width - left - right, bottom)!!
     val patchBottomRight    = image.getSubimage(width - right, height - bottom, right               , bottom)!!
-    // @formatter:on
+    // @formatter:onCancellable
 }
 
 fun Graphics2D.drawTexture(texture: Texture, x: Int, y: Int, width: Int = texture.width, height: Int = texture.height) {
@@ -67,7 +67,7 @@ fun Graphics2D.drawNinePatchTexture(ninePatch: NinePatch, x: Int, y: Int, width:
         drawImage(patchBottomLeft, x, y + height - bottom, left, bottom, null)
         drawImage(patchBottomCenter, x + left, y + height - bottom, width - left - right, bottom, null)
         drawImage(patchBottomRight, x + width - right, y + height - bottom, right, bottom, null)
-        // @formatter:on
+        // @formatter:onCancellable
 
     }
 }

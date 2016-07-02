@@ -1,6 +1,7 @@
 package com.aziis98.boxed.features
 
 import com.aziis98.boxed.Box
+import com.aziis98.boxed.events.Mouse
 import com.aziis98.boxed.textures.*
 import com.aziis98.boxed.utils.*
 import org.w3c.dom.Element
@@ -31,6 +32,12 @@ object RenderRegistry {
         register("menu-label") { box, g, el ->
             val text = el.getAttribute("text")
             val color = el.getAttribute("color").toColor() ?: Color.WHITE
+
+            if (box.contains(Mouse.x, Mouse.y)) {
+                g.color = Color(0x11000000.toInt(), true)
+                g.fillRect(0, 0, box.width, box.height)
+            }
+
             g.color = color
             val bounds = g.drawStringCentered(text, box.width / 2, box.height / 2 - 3)
 

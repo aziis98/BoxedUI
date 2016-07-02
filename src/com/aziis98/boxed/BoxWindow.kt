@@ -1,6 +1,8 @@
 package com.aziis98.boxed
 
+import com.aziis98.boxed.events.Mouse
 import com.aziis98.boxed.features.*
+import com.aziis98.boxed.features.FlowLayout
 import com.aziis98.boxed.textures.DefaultUI
 import com.aziis98.boxed.utils.*
 import org.w3c.dom.*
@@ -17,6 +19,8 @@ import kotlin.concurrent.thread
 // Copyright 2016 Antonio De Lucreziis
 
 class BoxWindow() : IContainer {
+
+    val rootUi = Box(this, id = "window", left = 0, right = 0, top = 0, bottom = 0)
 
     private val jframe = object : JFrame() {
         override fun paint(g: Graphics) { }
@@ -35,10 +39,10 @@ class BoxWindow() : IContainer {
             }
         })
 
+        Mouse.register(rootUi.events, this)
+
         System.setProperty("sun.awt.noerasebackground", "true")
     }
-
-    val rootUi = Box(this, left = 0, right = 0, top = 0, bottom = 0, id = "window")
 
     override var width: Int
         get() = jframe.width - (jframe.insets.left + jframe.insets.right)
@@ -87,7 +91,7 @@ class BoxWindow() : IContainer {
     private var lastSecondTime = (lastUpdateTime / 1000000000).toInt()
 
     var maxUpdatesBeforeRender = 5
-    var showFPS = true
+    var showFPS = false
     // var pauseRendering = false
     var totalUpdates = 0
 
@@ -133,8 +137,8 @@ class BoxWindow() : IContainer {
                 Thread.`yield`()
 
                 //This stops the app from consuming all your CPU. It makes this slightly less accurate, but is worth it.
-                //You can remove this line and it will still work (better), your CPU just climbs on certain OSes.
-                //FYI on some OS's this can cause pretty bad stuttering. Scroll down and have a look at different peoples' solutions to this.
+                //You can remove this line and it will still work (better), your CPU just climbs onCancellable certain OSes.
+                //FYI onCancellable some OS's this can cause pretty bad stuttering. Scroll down and have a look at different peoples' solutions to this.
 
                 Thread.sleep(1)
 
@@ -198,6 +202,14 @@ class BoxWindow() : IContainer {
                 ) {
                     zIndex = element.getAttribute("z-index").toNullableInt() ?: 0
 
+                    // Event Linking
+                    element.getAttribute("onClick").ifNotEmpty { attr ->
+                        println("Registered onClick with: $attr")
+                        events.on("mouse:click") {
+                            events.broadcast(attr)
+                        }
+                    }
+
                     element.childNodes.asElementList().forEach {
                         when {
                             it.tagName == "Feature" ->
@@ -227,7 +239,10 @@ class BoxWindow() : IContainer {
                 )
             }
             featureTypes.put("layout-flow") { parent, element ->
-
+                parent.features += FlowLayout(parent,
+                    direction = element.getAttribute("direction").toDirection(),
+                    gap = element.getAttribute("gap").toNullableInt() ?: 0
+                )
             }
         }
 

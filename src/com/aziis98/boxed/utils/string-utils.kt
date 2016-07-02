@@ -26,3 +26,10 @@ fun String.toDirection(): Direction = when (this) {
     "vertical" -> Direction.Vertical
     else -> throw InvalidAttributesException("Invalid direction: $this")
 }
+
+
+fun String.ifNotEmpty(block: (String) -> Unit) {
+    if (!isEmpty()) {
+        block(this)
+    }
+}
