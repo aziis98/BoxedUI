@@ -11,14 +11,14 @@ import com.aziis98.boxed.utils.*
 class EqualizedLayout(override val box: Box,
                       val left: Int, val right: Int, val top: Int, val bottom: Int,
                       val gap: Int = 0,
-                      val flowDirection: Direction = Direction.Horizontal) : ConstraintFeature {
+                      val direction: Direction = Direction.Horizontal) : ConstraintFeature {
     override fun updateConstraint() {
         val innerWidth = box.width - left - right
         val innerHeight = box.height - top - bottom
 
         val childrenCount = box.children.size
 
-        when (flowDirection) {
+        when (direction) {
             Direction.Horizontal -> {
                 val boxWidth = (innerWidth - (childrenCount - 1) * gap) / childrenCount
 

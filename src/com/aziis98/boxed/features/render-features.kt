@@ -1,8 +1,8 @@
 package com.aziis98.boxed.features
 
-import com.aziis98.boxed.Box
+import com.aziis98.boxed.*
 import com.aziis98.boxed.events.Mouse
-import com.aziis98.boxed.textures.*
+import com.aziis98.boxed.textures.drawNinePatchTexture
 import com.aziis98.boxed.utils.*
 import org.w3c.dom.Element
 import java.awt.*
@@ -39,6 +39,7 @@ object RenderRegistry {
             }
 
             g.color = color
+            g.font = DefaultUI.standardFont
             val bounds = g.drawStringCentered(text, box.width / 2, box.height / 2 - 3)
 
             box.width = bounds.width.toInt() + 15

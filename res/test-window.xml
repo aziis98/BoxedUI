@@ -1,37 +1,37 @@
 <Window title="BoxWindow Test" width="1000" height="600">
 
     <Box left="0" right="0" top="0" height="30" z-index="1">
-        <Feature type="render" by="menu"/>
-        <!--
-        <Feature type="layout-stack"
-                 direction="horizontal"
-                 gap="5"
-                 left="10" right="5" bottom="3"/>
-                 -->
+        <Feature type="render"
+                 by="menu"/>
+
         <Feature type="layout-flow"
                  direction="horizontal"
                  gap="1"/>
 
-        <Box left="0" top="0" height="27"
+        <Box left="0"
+             top="0" height="27"
              onClick="menu-file">
             <Feature type="render" by="menu-label" color="0x666666" text="File"/>
-            <!--<Feature type="render" by="border" color="0x00FF00"/>-->
         </Box>
+
         <Box top="0" height="27"
              onClick="menu-edit">
             <Feature type="render" by="menu-label" color="0x666666" text="Edit"/>
-            <!--<Feature type="render" by="border" color="0x0000FF"/>-->
         </Box>
+
         <Box top="0" height="27"
              onClick="menu-view">
             <Feature type="render" by="menu-label" color="0x666666" text="View"/>
-            <!--<Feature type="render" by="border" color="0xFF0000"/>-->
         </Box>
+
         <Box top="0" height="27"
              onClick="menu-help">
             <Feature type="render" by="menu-label" color="0x666666" text="Help"/>
-            <!--<Feature type="render" by="border" color="0xFF00FF"/>-->
         </Box>
+    </Box>
+
+    <Box left="0" right="0" top="30" bottom="0">
+        <Feature type="render" by="latin-analyzer"/>
     </Box>
 
 </Window>

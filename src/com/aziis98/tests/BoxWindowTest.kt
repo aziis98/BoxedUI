@@ -1,26 +1,31 @@
 package com.aziis98.tests
 
-import com.aziis98.boxed.BoxWindow
-import com.aziis98.boxed.utils.tokenize
-import org.junit.Assert.assertEquals
+import com.aziis98.boxed.*
+import com.aziis98.boxed.features.RenderRegistry
+import com.aziis98.boxed.utils.drawStringCentered
 import org.junit.Test
 import printfRec
+import java.awt.Color
 import java.nio.file.Paths
 
 // Copyright 2016 Antonio De Lucreziis
 
 internal class BoxWindowTest {
-
     @Test
     fun testTokenizer() {
-        val query = "@box1#tag1"
 
-        assertEquals(listOf("@", "box1", "#", "tag1"), tokenize(query))
     }
-
 }
 
+const val loremIpsum = "Lorem ipsum dolor sit amet, consectetur adipisci elit"
+
 fun main(args: Array<String>) {
+    RenderRegistry.register("latin-analyzer") { box, g, el ->
+        g.color = Color.BLACK
+        g.font = DefaultUI.standardFontMedium
+        g.drawStringCentered(loremIpsum, box.width / 2, box.height / 2)
+    }
+
     BoxWindow.fromXmlTemplate(Paths.get("res/test-window.xml")).apply {
         rootUi.apply {
             events.on("menu-file") {

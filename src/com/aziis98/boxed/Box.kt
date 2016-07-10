@@ -14,7 +14,7 @@ open class Box(val containter: IContainer,
                var top: Int = ABSENT, var bottom: Int = ABSENT,
                override var width: Int = ABSENT,
                override var height: Int = ABSENT,
-               val id: String = "_noId_") : IContainer, Comparable<Box> {
+               var id: String = "_noId_") : IContainer, Comparable<Box> {
 
     val constraintFlags = BitSet()
     var enabled = true
@@ -23,7 +23,7 @@ open class Box(val containter: IContainer,
     var features: Collection<Feature> = ArrayList()
     var children = SortedList<Box>()
 
-    val tags = HashSet<String>()
+    var tags = HashSet<String>()
     val events = EventDispatcher()
 
     private var recomputeLayout = 10

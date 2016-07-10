@@ -8,6 +8,25 @@ fun tokenize(source: String, gluer: (Char, Char) -> Boolean = ::standardGluer): 
     return tokenize(gluer, source.toList()).map { String(it.toCharArray()) }
 }
 
+/*
+[ 'v', 'a', 'r', ' ', 'a', '1', ' ', '=', ' ', '1', '0' ]
+                        |
+                        v
+[ [ 'v', 'a', 'r' ], [ ' ' ], [ 'a', '1' ], [ ' ' ], [ '=' ], [ ' ' ], [ '1', '0' ] ]
+
+"var a1 = 10"
+ |
+ |
+ |
+ v
+[ "var", " ", "a1", " ", "=", " ", "10" ]
+ .
+ .
+ .
+ v
+[ "var", "a1", "=", "10" ]
+
+ */
 fun <T> tokenize(predicate: (T, T) -> Boolean,
                  list: List<T>,
                  accumulator: MutableList<MutableList<T>> = mutableListOf(mutableListOf(list.first()))): MutableList<MutableList<T>> {

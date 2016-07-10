@@ -1,6 +1,6 @@
 package com.aziis98.boxed.textures
 
-import java.awt.*
+import java.awt.Graphics2D
 import java.awt.image.BufferedImage
 import java.nio.file.*
 import javax.imageio.ImageIO
@@ -70,13 +70,4 @@ fun Graphics2D.drawNinePatchTexture(ninePatch: NinePatch, x: Int, y: Int, width:
         // @formatter:onCancellable
 
     }
-}
-
-object DefaultUI {
-
-    val standardFont = Font("Roboto", Font.PLAIN, 14)
-
-    val menuBar = TextureLoader.ninePatch(Paths.get("assets/ui/menubar.png"))
-    val statusBar = TextureLoader.ninePatch(Paths.get("assets/ui/light-statusbar.png"))
-
 }

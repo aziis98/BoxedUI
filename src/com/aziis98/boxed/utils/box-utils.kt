@@ -33,7 +33,7 @@ fun Box.box(left: Int = -1,
  * Ex. "#aTag"
  * @param query A query on a single element in the tree
  */
-fun stringToQuery(query: String): (Box) -> Boolean {
+fun stringToSingleQuery(query: String): (Box) -> Boolean {
     val tokens = tokenize(query)
     var id: String? = null
     val tags = mutableListOf<String>()
@@ -59,6 +59,14 @@ fun stringToQuery(query: String): (Box) -> Boolean {
         // Applied boolean logic here
         (id == null || box.id == id) && box.tags.containsAll(tags)
     }
+}
+
+/**
+ * @param query A query on the whole tree
+ * @return A list of queries on the various levels of the queried tree
+ */
+fun stringToQuery(query: String): List<(Box) -> Boolean> {
+    return query.split(" ").map { stringToSingleQuery(it) }
 }
 
 /**

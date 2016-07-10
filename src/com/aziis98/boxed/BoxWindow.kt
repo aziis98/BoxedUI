@@ -3,7 +3,6 @@ package com.aziis98.boxed
 import com.aziis98.boxed.events.Mouse
 import com.aziis98.boxed.features.*
 import com.aziis98.boxed.features.FlowLayout
-import com.aziis98.boxed.textures.DefaultUI
 import com.aziis98.boxed.utils.*
 import org.w3c.dom.*
 import java.awt.*
@@ -160,7 +159,7 @@ class BoxWindow() : IContainer {
         val g = buffer?.graphics as Graphics2D
 
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
-        g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HRGB)
+        g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON)
         g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR)
 
         g.font = DefaultUI.standardFont
@@ -201,10 +200,12 @@ class BoxWindow() : IContainer {
                     height = element.getAttribute("height").toNullableInt() ?: Box.ABSENT
                 ) {
                     zIndex = element.getAttribute("z-index").toNullableInt() ?: 0
+                    element.getAttribute("id").ifNotEmpty { id = it }
+                    element.getAttribute("tag").ifNotEmpty { tags = it.split(" ").toHashSet() }
 
                     // Event Linking
                     element.getAttribute("onClick").ifNotEmpty { attr ->
-                        println("Registered onClick with: $attr")
+                        // println("Registered onClick with: $attr")
                         events.on("mouse:click") {
                             events.broadcast(attr)
                         }
@@ -226,7 +227,7 @@ class BoxWindow() : IContainer {
                     RenderRegistry.registry[element.getAttribute("by")]!!(this, g, element)
                 }
             }
-            featureTypes.put("layout-stack") { parent, element ->
+            featureTypes.put("layout-equalized") { parent, element ->
                 val attrDirection = element.getAttribute("direction")
 
                 parent.features += EqualizedLayout(parent,
@@ -234,7 +235,7 @@ class BoxWindow() : IContainer {
                     right  = element.getAttribute("right").toNullableInt() ?: 0,
                     top    = element.getAttribute("top").toNullableInt() ?: 0,
                     bottom = element.getAttribute("bottom").toNullableInt() ?: 0,
-                    flowDirection = attrDirection.toDirection(),
+                    direction = attrDirection.toDirection(),
                     gap = element.getAttribute("gap").toNullableInt() ?: 0
                 )
             }
