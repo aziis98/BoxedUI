@@ -1,6 +1,8 @@
 package com.aziis98.tests
 
 import com.aziis98.boxed.BoxWindow
+import com.aziis98.boxed.utils.tokenize
+import org.junit.Assert.assertEquals
 import org.junit.Test
 import printfRec
 import java.nio.file.Paths
@@ -10,12 +12,10 @@ import java.nio.file.Paths
 internal class BoxWindowTest {
 
     @Test
-    fun testWindow() {
+    fun testTokenizer() {
+        val query = "@box1#tag1"
 
-        BoxWindow
-            .fromXmlTemplate(Paths.get("res/test-window.xml"))
-            .start()
-
+        assertEquals(listOf("@", "box1", "#", "tag1"), tokenize(query))
     }
 
 }
@@ -28,7 +28,7 @@ fun main(args: Array<String>) {
             }
         }
 
-        start()
+        bootstrap()
 
         printfRec(rootUi) { fsb, box, rec ->
             fsb.appendln("$box [")

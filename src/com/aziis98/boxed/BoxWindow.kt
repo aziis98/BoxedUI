@@ -64,7 +64,7 @@ class BoxWindow() : IContainer {
         get() = jframe.isResizable
         set(value) { jframe.isResizable = value }
 
-    fun start() {
+    fun bootstrap() {
         visible = true
         thread {
             applicationLoop()

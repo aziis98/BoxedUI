@@ -2,6 +2,7 @@ package com.aziis98.boxed.utils
 
 import java.awt.Graphics2D
 import java.awt.geom.Rectangle2D
+import java.util.*
 
 // Copyright 2016 Antonio De Lucreziis
 
@@ -33,3 +34,10 @@ fun <T> List<T>.tail() = filterIndexed { i, t -> i != 0 }
 fun <T> Collection<T>.get(element: T) = contains(element)
 
 fun <K, V> Map<K, V>.get(element: K) = containsKey(element)
+
+
+fun <T> linkedListOf(vararg elements: T): LinkedList<T> {
+    return LinkedList<T>().apply {
+        addAll(elements)
+    }
+}
