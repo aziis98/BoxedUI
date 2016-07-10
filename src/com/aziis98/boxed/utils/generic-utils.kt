@@ -18,6 +18,10 @@ fun Graphics2D.drawStringCentered(string: String, x: Int, y: Int): Rectangle2D {
     return bounds
 }
 
+fun Graphics2D.drawCircle(x: Int, y: Int, radius: Int) {
+    drawOval(x - radius - 1, y - radius - 1, radius * 2 + 1, radius * 2 + 1)
+}
+
 fun <T> T?.notNull(block: T.() -> Unit) {
     this?.block()
 }

@@ -16,6 +16,12 @@ object Mouse {
 
     var button = Buttons.None
 
+    val dx: Int
+        get() = x - prevX
+    val dy: Int
+        get() = y - prevY
+
+
     fun register(eventDispatcher: EventDispatcher, container: Container) {
         val adapter = object : MouseAdapter() {
             override fun mouseClicked(e: MouseEvent) {
@@ -45,6 +51,10 @@ object Mouse {
 
                 eventDispatcher.dispatch("mouse:move")
             }
+
+            override fun mouseWheelMoved(e: MouseWheelEvent) {
+                eventDispatcher.dispatch("mouse:scroll", MouseScrollEvent(e.wheelRotation))
+            }
         }
 
         container.addMouseListener(adapter)
@@ -72,5 +82,7 @@ object Mouse {
 
         }
     }
+
+    data class MouseScrollEvent(val scroll: Int)
 
 }
