@@ -2,6 +2,7 @@ package com.aziis98.boxed.textures
 
 import java.awt.Graphics2D
 import java.awt.image.BufferedImage
+import java.io.InputStream
 import java.nio.file.*
 import javax.imageio.ImageIO
 
@@ -18,6 +19,10 @@ object TextureLoader {
         left, right, top, bottom
     )
 
+    fun ninePatch(stream: InputStream, left: Int = 9, right: Int = 9, top: Int = 9, bottom: Int = 9) = NinePatch(
+        ImageIO.read(stream),
+        left, right, top, bottom
+    )
 }
 
 open class Texture(val image: BufferedImage) {

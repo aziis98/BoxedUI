@@ -50,6 +50,9 @@ open class Box(val containter: IContainer,
     val parent: Box?
         get() = containter as? Box
 
+    val root: Box
+        get() = if (containter is Box) containter.root else this
+
     val absoluteLeft: Int
         get() = left + (parent?.absoluteLeft ?: 0)
 

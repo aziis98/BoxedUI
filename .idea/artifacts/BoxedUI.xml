@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="BoxedUI">
+    <output-path>$PROJECT_DIR$/out/artifacts/BoxedUI</output-path>
+    <root id="archive" name="BoxedUI.jar">
+      <element id="module-output" name="BoxedUI" />
+      <element id="dir-copy" path="$PROJECT_DIR$/assets" />
+    </root>
+  </artifact>
+</component>

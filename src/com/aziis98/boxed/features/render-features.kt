@@ -30,8 +30,8 @@ object RenderRegistry {
             g.drawNinePatchTexture(DefaultUI.menuBar, 0, 0, box.width, box.height)
         }
         register("menu-label") { box, g, el ->
-            val text = el.getAttribute("text")
-            val color = el.getAttribute("color").toColor() ?: Color.WHITE
+            val text = el.getAttribute("label")
+            val color = "0x666666".toColor()!! // el.getAttribute("color").toColor() ?: Color.WHITE
 
             if (box.contains(Mouse.x, Mouse.y)) {
                 g.color = Color(0x11000000.toInt(), true)

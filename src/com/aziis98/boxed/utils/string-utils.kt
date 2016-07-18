@@ -5,11 +5,11 @@ import javax.naming.directory.InvalidAttributesException
 
 // Copyright 2016 Antonio De Lucreziis
 
-fun String.toNullableInt(): Int? {
+fun String.toInteger(default: Int = 0): Int {
     try {
-        return this.toInt()
+        return toInt()
     } catch (e: NumberFormatException) {
-        return null
+        return default
     }
 }
 

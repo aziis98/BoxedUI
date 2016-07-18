@@ -42,8 +42,17 @@ class FlowLayout(override val box: Box, val direction: Direction, val gap: Int =
         box.children.toList().tail().zip(box.children.toList().init()).forEach { pair ->
             val (box, previous) = pair
 
-            box.left = previous.left + previous.width + gap
-            box.constraintFlags.set(Box.LEFT)
+            when(direction) {
+                Direction.Horizontal -> {
+                    box.left = previous.left + previous.width + gap
+                    box.constraintFlags.set(Box.LEFT)
+                }
+                Direction.Vertical -> {
+                    box.top = previous.top + previous.height + gap
+                    box.constraintFlags.set(Box.TOP)
+                }
+            }
+
         }
     }
 }

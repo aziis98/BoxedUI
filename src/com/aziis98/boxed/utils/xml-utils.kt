@@ -17,6 +17,12 @@ private class ListByNodeList(val nodeList: NodeList) : AbstractList<Element?>() 
 
 fun NodeList.asElementList() = if(length == 0) emptyList() else ListByNodeList(this).filterNotNull()
 
+fun NodeList.forEach(action: (Element) -> Unit) = asElementList().forEach(action)
+
+fun NodeList.forEachIndexed(action: (Int, Element) -> Unit) = asElementList().forEachIndexed(action)
+
+operator fun Element.get(name: String): String = getAttribute(name)
+
 fun readXml(path: Path): Element {
     return DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(path.toFile()).documentElement
 }

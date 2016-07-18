@@ -3,6 +3,7 @@ package com.aziis98.tests
 import com.aziis98.boxed.*
 import com.aziis98.boxed.events.Mouse
 import com.aziis98.boxed.features.RenderRegistry
+import com.aziis98.boxed.templates.*
 import com.aziis98.boxed.utils.*
 import org.w3c.dom.Element
 import printfRec
@@ -35,9 +36,9 @@ fun main(args: Array<String>) {
 
         (document.getElementsByTagName("comments").item(0) as Element).getElementsByTagName("comment").asElementList().forEach { comment ->
             g.renderTextHighlight(box, lines,
-                comment.getAttribute("line").toInt(),
-                comment.getAttribute("pos").toInt(),
-                comment.getAttribute("length").toInt(),
+                comment.getAttribute("line").toInteger(),
+                comment.getAttribute("pos").toInteger(),
+                comment.getAttribute("length").toInteger(),
                 getScopeColor(comment.getAttribute("scope"))
                 )
         }
@@ -46,7 +47,7 @@ fun main(args: Array<String>) {
         g.drawCircle(Mouse.x - box.absoluteLeft, Mouse.y - box.absoluteTop, 3)
     }
 
-    BoxWindow.fromXmlTemplate(Paths.get("res/test-window.xml")).apply {
+    BoxWindow.fromXmlTemplate(Paths.get("res/test-window.xml"), MenuBarTemplate, ContextMenuTemplate).apply {
         rootUi.apply {
             events.on("menu-file") {
                 println("Show the File menu")

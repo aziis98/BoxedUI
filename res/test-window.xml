@@ -1,5 +1,6 @@
 <Window title="BoxWindow Test" width="1000" height="600">
 
+    <!--
     <Box left="0" right="0" top="0" height="30" z-index="1">
         <Feature type="render"
                  by="menu"/>
@@ -11,24 +12,40 @@
         <Box left="0"
              top="0" height="27"
              onClick="menu-file">
-            <Feature type="render" by="menu-label" color="0x666666" text="File"/>
+            <Feature type="render" by="menu-label" color="0x666666" label="File"/>
         </Box>
 
         <Box top="0" height="27"
              onClick="menu-edit">
-            <Feature type="render" by="menu-label" color="0x666666" text="Edit"/>
+            <Feature type="render" by="menu-label" color="0x666666" label="Edit"/>
         </Box>
 
         <Box top="0" height="27"
              onClick="menu-view">
-            <Feature type="render" by="menu-label" color="0x666666" text="View"/>
+            <Feature type="render" by="menu-label" color="0x666666" label="View"/>
         </Box>
 
         <Box top="0" height="27"
              onClick="menu-help">
-            <Feature type="render" by="menu-label" color="0x666666" text="Help"/>
+            <Feature type="render" by="menu-label" color="0x666666" label="Help"/>
         </Box>
     </Box>
+    -->
+
+    <MenuBar>
+        <MenuBarItem label="File" onClick="menu-file"/>
+        <MenuBarItem label="Edit" onClick="menu-file"/>
+        <MenuBarItem label="View" onClick="menu-file"/>
+        <MenuBarItem label="Help" onClick="menu-file"/>
+    </MenuBar>
+
+    <ContextMenu>
+        <Menu id="menuFile">
+            <MenuItem label="Open" onClick="menu-file-open"/>
+            <MenuItem label="Save" onClick="menu-file-save"/>
+            <MenuItem label="Save As..."/>
+        </Menu>
+    </ContextMenu>
 
     <Box left="0" right="0" top="30" bottom="0">
         <Feature type="render" by="latin-analyzer"/>

@@ -1,15 +1,12 @@
 package com.aziis98.boxed
 
 import com.aziis98.boxed.events.Mouse
-import com.aziis98.boxed.features.*
-import com.aziis98.boxed.features.FlowLayout
-import com.aziis98.boxed.utils.*
-import org.w3c.dom.*
+import com.aziis98.boxed.templates.ITemplate
+import com.aziis98.boxed.utils.IContainer
 import java.awt.*
 import java.awt.event.*
 import java.awt.image.BufferedImage
 import java.nio.file.Path
-import java.util.*
 import javax.swing.*
 import javax.xml.parsers.DocumentBuilderFactory
 import kotlin.concurrent.thread
@@ -186,100 +183,19 @@ class BoxWindow() : IContainer {
 
     companion object {
 
-        val boxTemplates = HashMap<String, (parent: Box, Element) -> Unit>()
-        val featureTypes = HashMap<String, (parent: Box, Element) -> Unit>()
-
-        init {
-            boxTemplates.put("Box") { parent, element ->
-                parent.box(
-                    left = element.getAttribute("left").toNullableInt() ?: Box.ABSENT,
-                    right = element.getAttribute("right").toNullableInt() ?: Box.ABSENT,
-                    top = element.getAttribute("top").toNullableInt() ?: Box.ABSENT,
-                    bottom = element.getAttribute("bottom").toNullableInt() ?: Box.ABSENT,
-                    width = element.getAttribute("width").toNullableInt() ?: Box.ABSENT,
-                    height = element.getAttribute("height").toNullableInt() ?: Box.ABSENT
-                ) {
-                    zIndex = element.getAttribute("z-index").toNullableInt() ?: 0
-                    element.getAttribute("id").ifNotEmpty { id = it }
-                    element.getAttribute("tag").ifNotEmpty { tags = it.split(" ").toHashSet() }
-
-                    // Event Linking
-                    element.getAttribute("onClick").ifNotEmpty { attr ->
-                        // println("Registered onClick with: $attr")
-                        events.on("mouse:click") {
-                            events.broadcast(attr)
-                        }
-                    }
-
-                    element.childNodes.asElementList().forEach {
-                        when {
-                            it.tagName == "Feature" ->
-                                parseFeature(this, it)
-                            else ->
-                                parseElement(this, it)
-                        }
-                    }
-                }
-            }
-
-            featureTypes.put("render") { parent, element ->
-                parent.features += parent.render { g ->
-                    RenderRegistry.registry[element.getAttribute("by")]!!(this, g, element)
-                }
-            }
-            featureTypes.put("layout-equalized") { parent, element ->
-                val attrDirection = element.getAttribute("direction")
-
-                parent.features += EqualizedLayout(parent,
-                    left   = element.getAttribute("left").toNullableInt() ?: 0,
-                    right  = element.getAttribute("right").toNullableInt() ?: 0,
-                    top    = element.getAttribute("top").toNullableInt() ?: 0,
-                    bottom = element.getAttribute("bottom").toNullableInt() ?: 0,
-                    direction = attrDirection.toDirection(),
-                    gap = element.getAttribute("gap").toNullableInt() ?: 0
-                )
-            }
-            featureTypes.put("layout-flow") { parent, element ->
-                parent.features += FlowLayout(parent,
-                    direction = element.getAttribute("direction").toDirection(),
-                    gap = element.getAttribute("gap").toNullableInt() ?: 0
-                )
-            }
-        }
-
-        fun fromXmlTemplate(path: Path): BoxWindow {
+        fun fromXmlTemplate(path: Path, vararg templates: ITemplate): BoxWindow {
             val window = DocumentBuilderFactory
                 .newInstance()
                 .newDocumentBuilder()
                 .parse(path.toFile()).documentElement
 
-            assert(window.tagName == "Window")
+            val builder = BoxWindowBuilder()
 
-            val boxWindow = BoxWindow().apply {
-                title = window.getAttribute("title")
-                width = window.getAttribute("width").toNullableInt() ?: 640
-                height = window.getAttribute("height").toNullableInt() ?: 480
-
-                window.childNodes.asElementList().forEach {
-                    parseElement(rootUi, it)
-                }
+            templates.forEach {
+                it.apply { builder.registerTemplates() }
             }
 
-            return boxWindow
-        }
-
-        fun NodeList.parseChildren(parent: Box) {
-            asElementList().forEach { parseElement(parent, it) }
-        }
-
-        fun parseElement(parent: Box, element: Element) {
-            val templater = boxTemplates[element.tagName]!!
-
-            templater(parent, element)
-        }
-
-        fun parseFeature(parent: Box, element: Element) {
-            featureTypes[element.getAttribute("type")]!!(parent, element)
+            return builder.parseFromXml(window)
         }
 
     }
